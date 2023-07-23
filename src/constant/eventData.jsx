@@ -158,6 +158,13 @@ export const AdminData = [
         time_1: '8:00 A.M.',
         image_1: images.event1,
       },
+      {
+        id_1: 6,
+        title_1: 'Sing Binan',
+        date_1: '2023-08-15',
+        time_1: '8:00 A.M.',
+        image_1: images.event1,
+      },
     ];
 
 export default eventData;

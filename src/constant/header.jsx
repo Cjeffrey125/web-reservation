@@ -6,6 +6,7 @@ import { useUserAuth } from '../components/context/authContext';
 import { FaFacebook, FaTwitter, FaInstagram, FaGoogle, FaYoutube, FaUserCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import UserDropdown from '../components/user/userDropdown';
+import images from './images'
 
 const Header = () => {
   const { user, logout } = useUserAuth();
@@ -52,7 +53,7 @@ const Header = () => {
       className={`flex w-full justify-between items-center h-20 px-4 z-10 text-black navbar sticky top-0 backdrop-blur-lg bg-white/30`}
     > 
       <div>
-        <h1>Biñan</h1>
+      <img src={images.logo} alt="Logo" className="h-12" />
       </div>
 
       <ul className="hidden md:flex">
@@ -91,7 +92,7 @@ const Header = () => {
         className={nav ? 'absolute text-black left-0 top-0 w-full bg-gray-100/90 px-4 py-7 flex flex-col' : 'absolute left-[-100%]'}
       >
         <ul>
-          <h1>Biñan</h1>
+          <img src={images.logo} alt="Logo" className="h-12" />
 
           <li className="border-b hover:bg-green-200">
           <Link to="/admin">Home</Link>
