@@ -102,7 +102,8 @@ const AdminBlog = () => {
       <div className="flex justify-between items-center px-60 mt-8">
         <h1>Articles Created</h1>
         <div className="flex items-center" style={{ margin: '0 10px', position: 'relative' }}>
-          <svg viewBox="0 0 24 24" fill="#525353" width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" style={{ position: 'absolute', left: '8px', top: '7px' }}>
+          {/* Adjust the width and height attributes of the SVG */}
+          <svg viewBox="0 0 24 24" fill="#525353" width="15px" height="15px" xmlns="http://www.w3.org/2000/svg" style={{ position: 'absolute', left: '12px', top: '9px' }}>
             <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l4 4 1.49-1.49-4-4zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
             <path d="M0 0h24v24H0z" fill="none" />
           </svg>
