@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BsPencil, BsX } from 'react-icons/bs';
 
-const AdminBlog = () => {
+const AdminEvent = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [isEditClicked, setEditClicked] = useState({});
   const [isDeleteClicked, setDeleteClicked] = useState({});
@@ -28,77 +28,77 @@ const AdminBlog = () => {
     {
       id: 1,
       title: 'Get Ready to dance the night away at...',
-      organizer: 'BCHATO',
+      event: 'BCHATO',
       date: '2023-07-25',
       publishDate: '2023-07-20',
     },
     {
       id: 2,
       title: 'Experience the Rhythm and Energy of...',
-      organizer: 'BCHATO',
+      event: 'BCHATO',
       date: '2023-08-10',
       publishDate: '2023-08-05',
     },
     {
       id: 3,
       title: 'Get Ready to dance the night away at...',
-      organizer: 'BCHATO',
+      event: 'BCHATO',
       date: '2023-08-10',
       publishDate: '2023-08-05',
     },
     {
       id: 4,
       title: 'Experience the Rhythm and Energy of...',
-      organizer: 'BCHATO',
+      event: 'BCHATO',
       date: '2023-08-10',
       publishDate: '2023-08-05',
     },
     {
       id: 5,
       title: 'Get Ready to dance the night away at...',
-      organizer: 'BCHATO',
+      event: 'BCHATO',
       date: '2023-08-10',
       publishDate: '2023-08-05',
     },
     {
       id: 6,
       title: 'Experience the Rhythm and Energy of...',
-      organizer: 'BCHATO',
+      event: 'BCHATO',
       date: '2023-08-10',
       publishDate: '2023-08-05',
     },
     {
       id: 7,
       title: 'Get Ready to dance the night away at...',
-      organizer: 'BCHATO',
+      event: 'BCHATO',
       date: '2023-08-10',
       publishDate: '2023-08-05',
     },
     {
       id: 8,
       title: 'Experience the Rhythm and Energy of...',
-      organizer: 'BCHATO',
+      event: 'BCHATO',
       date: '2023-08-10',
       publishDate: '2023-08-05',
     },
     {
       id: 9,
       title: 'Experience the Rhythm and Energy of...',
-      organizer: 'BCHATO',
+      event: 'BCHATO',
       date: '2023-08-10',
       publishDate: '2023-08-05',
     },
     {
       id: 10,
       title: 'Experience the Rhythm and Energy of...',
-      organizer: 'BCHATO',
+      event: 'BCHATO',
       date: '2023-08-10',
       publishDate: '2023-08-05',
     },
   ];
 
   return (
-    <div>
+    <div className="shadow-md rounded-lg p-4" style={{ borderRadius: '35px' }}>
       <div className="flex justify-between items-center px-60 mt-8">
         <h1>Events Created</h1>
         <div className="flex items-center" style={{ margin: '0 10px', position: 'relative' }}>
@@ -114,12 +114,12 @@ const AdminBlog = () => {
       </div>
 
       <div className="flex justify-center overflow-y-scroll">
-        <table className="w-3/4 mt-4 border rounded mb-8 shadow-md" style={{ borderColor: 'rgba(224, 224, 224, 0.7)' }}>
+        <table className="w-3/4 mt-4 border rounded mb-8" style={{ borderColor: 'rgba(224, 224, 224, 0.7)' }}>
           <thead style={{ backgroundColor: 'rgba(224, 224, 224, 0.7)' }}>
             <tr>
               <th className="p-2" colSpan="7" style={{ backgroundColor: 'rgba(224, 224, 224, 0.7)' }}>
                 <ul className="flex border-b">
-                <li className={`cursor-pointer py-2 px-4 ${activeTab === 'all' ? 'bg-black text-white' : ''}`} onClick={() => handleTabChange('all')}>
+                  <li className={`cursor-pointer py-2 px-4 ${activeTab === 'all' ? 'bg-black text-white' : ''}`} onClick={() => handleTabChange('all')}>
                     All
                   </li>
                   <li className={`cursor-pointer py-2 px-4 ${activeTab === 'published' ? 'bg-black text-white' : ''}`} onClick={() => handleTabChange('published')}>
@@ -141,51 +141,55 @@ const AdminBlog = () => {
             </tr>
           </thead>
           <tbody style={{ backgroundColor: 'rgba(252, 252, 252)' }}>
-        {articlesData.map((article) => (
-          <tr key={article.id}>
-            <td className="border-b p-2 text-center">{article.id}</td>
-            <td className="border-b p-2 text-center" style={{ color: '#00008B' }}>
-              {article.title}
-            </td>
-            <td className="border-b p-2 text-center">{article.organizer}</td>
-            <td className="border-b p-2 text-center">{article.date}</td>
-            <td className="border-b p-2 text-center">{article.publishDate}</td>
-            <td className="border-b p-2 text-center">
-              <button
-                className="mr-2"
-                title="Edit"
-                style={{
-                  backgroundColor: isEditClicked[article.id] ? '#000101' : 'white',
-                  borderRadius: '50%',
-                }}
-                onClick={() => handleEditClick(article.id)}
-              >
-                <BsPencil
-                  size={20}
-                  color={isEditClicked[article.id] ? '#e9e9e8' : '#525353'}
-                />
-              </button>
-              <button
-                title="Delete"
-                style={{
-                  backgroundColor: isDeleteClicked[article.id] ? '#000101' : 'white',
-                  borderRadius: '50%',
-                }}
-                onClick={() => handleDeleteClick(article.id)}
-              >
-                <BsX
-                  size={20}
-                  color={isDeleteClicked[article.id] ? '#e9e9e8' : '#525353'}
-                />
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
-);
+            {articlesData.map((article) => (
+              <tr key={article.id}>
+                <td className="border-b p-2 text-center">{article.id}</td>
+                <td className="border-b p-2 text-center" style={{ color: '#00008B' }}>
+                  {article.title}
+                </td>
+                <td className="border-b p-2 text-center">{article.event}</td>
+                <td className="border-b p-2 text-center">{article.date}</td>
+                <td className="border-b p-2 text-center">
+                  <div style={{ backgroundColor: '#a3f294', color: '#8c8c8c', padding: '0.5rem 1rem', borderRadius: '5px', width: 'fit-content', margin: 'auto' }}>
+                    {article.publishDate}
+                  </div>
+                </td>
+                <td className="border-b p-2 text-center">
+                  <button
+                    className="mr-2"
+                    title="Edit"
+                    style={{
+                      backgroundColor: isEditClicked[article.id] ? '#000101' : 'white',
+                      borderRadius: '50%',
+                    }}
+                    onClick={() => handleEditClick(article.id)}
+                  >
+                    <BsPencil
+                      size={20}
+                      color={isEditClicked[article.id] ? '#e9e9e8' : '#525353'}
+                    />
+                  </button>
+                  <button
+                    title="Delete"
+                    style={{
+                      backgroundColor: isDeleteClicked[article.id] ? '#000101' : 'white',
+                      borderRadius: '50%',
+                    }}
+                    onClick={() => handleDeleteClick(article.id)}
+                  >
+                    <BsX
+                      size={20}
+                      color={isDeleteClicked[article.id] ? '#e9e9e8' : '#525353'}
+                    />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 };
 
-export default AdminBlog;
+export default AdminEvent;
