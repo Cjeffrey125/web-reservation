@@ -4,53 +4,80 @@ import { eventData } from '../../constant/eventData';
 import FeaturedEvent from './featuredLayout';
 import UpcomingEvent from './upcomingLayout';
 import Search from '../search-dropdown/search';
+import eventdta from '../../constant/eventData'
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+import '../../../src/App.css';
 
 
 
 const Event = () => {
 
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  useEffect(() => {
-    const slideshowTimer = setTimeout(nextSlide, 5000);
-    return () => clearTimeout(slideshowTimer);
-  }, [currentIndex]);
-
-
-  const prevSlide = () => {
-    const isFirstSlide = currentIndex === 0;
-    const newIndex = isFirstSlide ? eventData.length -1: currentIndex -1;
-    setCurrentIndex(newIndex);
-  }
-
-  const nextSlide = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      const isLastSlide = currentIndex === eventData.length - 1;
-      const newIndex = isLastSlide ? 0 : currentIndex + 1;
-      setCurrentIndex(newIndex);
-      setIsTransitioning(false);
-    }, 500);
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    initialSlide: 0,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
+
 
 
   return (
     <section className="w-full py-20 border-b-[1px] relative z-0">
-
-    <div className="min-h-screen flex flex-col justify-between">
-        <div className="max-w-[1400px] w-full m-auto py-12 px-4 relative">
-          <Link to={`/event/${eventData[currentIndex].eventKey}`} key={eventData[currentIndex].eventKey}>
-            <div
-              className={`w-full h-[700px] rounded-2xl bg-center bg-cover duration-500 ${
-                isTransitioning ? 'opacity-0' : 'opacity-100'
-              }`}
-              style={{ backgroundImage: `url(${eventData[currentIndex].image})` }}
-            ></div>
-          </Link>
+<div className='App'>
+  <Slider {...settings}>
+    {eventdta.map((item) => (
+      <Link to={`/event/${item.eventKey}`} key={item.eventKey}>
+        <div className="card">
+          <div className="card-top">
+            <img
+              src={item.image}
+              alt={item.image}
+            />
+            <h1>{item.title}</h1>
+          </div>
+          <div className="card-bottom">
+            <h3>{item.price}</h3>
+            <span className="category">{item.organization}</span>
+          </div>
         </div>
-      </div>
+      </Link>
+    ))}
+  </Slider>
+</div>
+
+
+
 
       <div className="container mx-auto">
         <div className="mt-9 mb-9 ml-4">
