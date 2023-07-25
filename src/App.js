@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthContextProvider } from "./components/context/authContext";
 import { ShopContextProvider } from "./components/context/wishlistContext";
 import { BookingContextProvider } from "./components/context/bookingContext";
+
 import Header from "./constant/header";
 import Footer from "./constant/footer"
 import Home from "./components/home";
@@ -26,6 +27,7 @@ import BookEvents from "./components/user/bookEvents";
 
 
 
+
 function App() {
   return (
     <Router>
@@ -33,6 +35,7 @@ function App() {
         <AuthContextProvider>
         <ShopContextProvider>
         <BookingContextProvider>
+    
 
         <Header />
 
@@ -60,6 +63,8 @@ function App() {
          
           
         </Routes>
+
+  
         </BookingContextProvider>
         </ShopContextProvider>
         </AuthContextProvider>

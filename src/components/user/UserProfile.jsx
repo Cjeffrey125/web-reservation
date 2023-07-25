@@ -22,7 +22,6 @@ const UserProfile = () => {
   });
 
   useEffect(() => {
-    // Update the updatedUser state with the latest user data when user prop changes
     setUpdatedUser({
       firstname: user?.firstname || '',
       lastname: user?.lastname || '',
