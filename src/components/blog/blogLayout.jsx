@@ -17,16 +17,18 @@ const BlogLayout = ({ title, des, src, date, org }) => {
         </div>
         <div>
           <div className="flex items-center justify-between">
-            <h3 className="text-base uppercase text-designColor font-normal">
+            <h3 className="text-base uppercase text-[#142c0c] font-normal">
               {title}
             </h3>
           </div>
           <p className="text-sm tracking-wide mt-3 hover:text-gray-700 duration-300">
             {des}
           </p>
+         
         </div>
       </div>
     </div>
+    
   );
 };
 
