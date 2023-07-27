@@ -2,7 +2,7 @@ import React from 'react';
 
 const BlogLayout = ({ title, des, src, date, org }) => {
   return (
-    <div className="w-full p-4 xl:px-12 h-auto xl:py-10 rounded-lg shadow-md bg-gray-200 group hover:bg-gray-300 hover:bg-[#7a7a7a] transition-colors duration-1000">
+    <div className="w-full p-4 xl:px-12 h-auto xl:py-10 rounded-lg shadow-md bg-[#e9e9e8] group hover:bg-[#8d8d8c] transition-colors duration-1000">
       <div className="w-full h-[80%] overflow-hidden rounded-lg">
         <img
           className="w-full h-60 object-cover group-hover:scale-110 duration-300 cursor-pointer"
