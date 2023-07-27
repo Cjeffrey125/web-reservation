@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BsPencil, BsX } from 'react-icons/bs';
 import CreateArticle from './modal/createArticle';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
+import ConfirmationModal from './modal/confirmationModal';
+import ArticleModal from './modal/articleModal';
 
 const AdminBlog = () => {
   const [activeTab, setActiveTab] = useState('all');
@@ -10,6 +12,31 @@ const AdminBlog = () => {
   const [isDeleteClicked, setDeleteClicked] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [blogData, setBlogData] = useState([]);
+  const [articleToDelete, setArticleToDelete] = useState(null);
+  const [isArticleModalOpen, setArticleModalOpen] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState(null);
+
+  const [firstImageURL, setFirstImageURL] = useState('');
+  const [currentImageURL, setCurrentImageURL] = useState(null);
+
+  const handleOpenArticleModal = (articleData) => {
+    if (articleData) {
+      // Editing an existing article
+      setSelectedArticle(articleData);
+      setCurrentImageURL(articleData.src || '');
+    } else {
+      // Creating a new article
+      setSelectedArticle(null);
+    }
+    setArticleModalOpen(true);
+  };
+
+  
+  const handleCloseArticleModal = () => {
+    setSelectedArticle(null);
+    setArticleModalOpen(false);
+  };
+
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -29,12 +56,20 @@ const AdminBlog = () => {
   };
 
   useEffect(() => {
-   
     const fetchArticles = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, 'articles'));
-        const articles = querySnapshot.docs.map((doc) => doc.data());
+        const articles = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
         setBlogData(articles);
+
+        // Get the first article with an image URL and set it as the initial image
+        const firstArticleWithImage = articles.find((article) => article.src);
+        if (firstArticleWithImage) {
+          setFirstImageURL(firstArticleWithImage.src);
+        }
       } catch (error) {
         console.error('Error fetching articles:', error);
       }
@@ -53,12 +88,46 @@ const AdminBlog = () => {
     }));
   };
 
+  
   const handleDeleteClick = (articleId) => {
-    setDeleteClicked((prev) => ({
-      ...prev,
-      [articleId]: !prev[articleId],
-    }));
+    setArticleToDelete(articleId); 
   };
+  
+  const handleConfirmDelete = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'articles'));
+      const documentIdToDelete = querySnapshot.docs.find((doc) => doc.data().ID === articleToDelete)?.id;
+  
+      if (documentIdToDelete) {
+        await deleteDoc(doc(db, 'articles', documentIdToDelete));
+        setBlogData((prevBlogData) =>
+          prevBlogData.filter((article) => article.ID !== articleToDelete)
+        );
+
+        setArticleToDelete(null); 
+      } else {
+        console.warn('Article not found with the specified ID:', articleToDelete);
+      }
+    } catch (error) {
+      console.error('Error deleting article:', error);
+    }
+  };
+  const handleImageChange = (imageFile, newImageURL) => {
+    // Update the image data in the selectedArticle state when the user uploads a new image
+    setSelectedArticle((prevSelectedArticle) => ({
+      ...prevSelectedArticle,
+      src: newImageURL,
+    }));
+    setCurrentImageURL(newImageURL); // Update the currentImageURL in the AdminBlog state
+  };
+  const updateArticleImage = (articleId, newImageURL) => {
+    setBlogData((prevBlogData) =>
+      prevBlogData.map((article) =>
+        article.ID === articleId ? { ...article, src: newImageURL } : article
+      )
+    );
+  };
+
 
   return (
     <div>
@@ -118,20 +187,21 @@ const AdminBlog = () => {
                   </div>
                 </td>
                 <td className="border-b p-2 text-center">
-                  <button
+                <button
                     className="mr-2"
                     title="Edit"
                     style={{
                       backgroundColor: isEditClicked[article.ID] ? '#000101' : 'white',
                       borderRadius: '50%',
                     }}
-                    onClick={() => handleEditClick(article.ID)}
+                    onClick={() => handleOpenArticleModal(article)} 
                   >
                     <BsPencil
                       size={20}
                       color={isEditClicked[article.ID] ? '#e9e9e8' : '#525353'}
                     />
                   </button>
+
                   <button
                     title="Delete"
                     style={{
@@ -152,14 +222,37 @@ const AdminBlog = () => {
         </table>
       </div>
 
+
       {showModal && (
-        <CreateArticle
-          show={showModal}
-          onClose={handleCloseModal}
-          onSaveArticle={handleSaveArticle}
-        />
+        <CreateArticle show={showModal} onClose={handleCloseModal} onSaveArticle={handleSaveArticle} />
       )}
 
+      {selectedArticle && (
+        <ArticleModal
+          articleId={selectedArticle.id}
+          title={selectedArticle.title}
+          des={selectedArticle.description}
+          src={currentImageURL}
+          date={selectedArticle.date}
+          org={selectedArticle.organization}
+          onClose={handleCloseArticleModal} 
+          isOpen={isArticleModalOpen} 
+          firstImageURL={firstImageURL}
+          onImageChange={(imageFile, newImageURL) => {
+            handleImageChange(imageFile, newImageURL); // Update the image URL in the AdminBlog state
+            updateArticleImage(selectedArticle.id, newImageURL); // Update the image URL in the blogData state
+          }} 
+          
+        />
+      )}
+      
+      {articleToDelete && (
+      <ConfirmationModal
+        closeModal={() => setArticleToDelete(null)}
+        openModal={!!articleToDelete}
+        onConfirmDelete={handleConfirmDelete}
+      />
+      )}
 
     </div>
   );

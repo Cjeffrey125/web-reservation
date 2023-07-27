@@ -20,6 +20,7 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
   const [selectedDay, setSelectedDay] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,7 +36,7 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
       image: imageFile,
     }));
   };
-
+  
   const handleImageUpload = async (imageFile) => {
     try {
       const user = auth.currentUser;
@@ -75,6 +76,7 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
     }
   
     onClose();
+    window.location.reload();
   };
   
 
@@ -83,15 +85,16 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
     return `${month} ${day}, ${year}`;
   };
 
+
   
 
+
   return (
-    <div style={{ display: show ? 'block' : 'none' }}>
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)' }} />
-      <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }}>
-        <button className="absolute top-0 right-0 m-3 p-2 border-b-gray-500 text-black hover:text-gray-700 hover:bg-red-500 bg-transparent" onClick={onClose}>
-          <FontAwesomeIcon icon={faTimes} />
-        </button>
+    <div className='fixed inset-0 flex items-center justify-center z-50' style={{ display: show ? 'block' : 'none', backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+    <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', zIndex: '999', maxHeight: '80vh', overflowY: 'auto' }}>
+      <button className="absolute top-0 right-0 m-3 p-2 border-b-gray-500 text-black hover:text-gray-700 hover:bg-red-500 bg-transparent" onClick={onClose}>
+        <FontAwesomeIcon icon={faTimes} />
+      </button>
 
         <h2>Create New Article</h2>
 
