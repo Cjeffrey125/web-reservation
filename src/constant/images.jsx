@@ -1,5 +1,6 @@
 import login from '../assets/signup.png';
 import signup from '../assets/signup.png';
+import blog from '../assets/blog.jpg';
 import blog1 from '../assets/blgimg1.png';
 import blog2 from '../assets/blgimg2.png';
 import blog3 from '../assets/blgimg3.png';
@@ -16,6 +17,7 @@ import logo from '../assets/logo.png';
 const images = {
   login,
   signup,
+  blog,
   blog1,
   blog2,
   blog3,
