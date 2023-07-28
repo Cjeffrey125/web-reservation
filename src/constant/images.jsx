@@ -12,6 +12,9 @@ import event1 from '../assets/event1.png';
 import event2 from '../assets/event2.png';
 import event3 from '../assets/event3.png';
 import event4 from '../assets/event4.png';
+import event6 from '../assets/events6.jpg';
+import event7 from '../assets/events7.jpg';
+import event8 from '../assets/events8.jpg';
 import contacticon from '../assets/contacticon.png';
 import logo from '../assets/logo.png';
 
@@ -30,6 +33,9 @@ const images = {
   event2,
   event3,
   event4,
+  event6,
+  event7,
+  event8,
   contacticon,
   logo
 };
