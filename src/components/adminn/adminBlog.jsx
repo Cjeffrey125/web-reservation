@@ -16,17 +16,18 @@ const AdminBlog = () => {
   const [isArticleModalOpen, setArticleModalOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
 
-  const [firstImageURL, setFirstImageURL] = useState('');
+  
   const [currentImageURL, setCurrentImageURL] = useState(null);
 
   const handleOpenArticleModal = (articleData) => {
     if (articleData) {
-      // Editing an existing article
+  
       setSelectedArticle(articleData);
       setCurrentImageURL(articleData.src || '');
     } else {
-      // Creating a new article
+    
       setSelectedArticle(null);
+      setCurrentImageURL(''); 
     }
     setArticleModalOpen(true);
   };
@@ -56,20 +57,12 @@ const AdminBlog = () => {
   };
 
   useEffect(() => {
+   
     const fetchArticles = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, 'articles'));
-        const articles = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        const articles = querySnapshot.docs.map((doc) => doc.data());
         setBlogData(articles);
-
-        // Get the first article with an image URL and set it as the initial image
-        const firstArticleWithImage = articles.find((article) => article.src);
-        if (firstArticleWithImage) {
-          setFirstImageURL(firstArticleWithImage.src);
-        }
       } catch (error) {
         console.error('Error fetching articles:', error);
       }
@@ -237,10 +230,9 @@ const AdminBlog = () => {
           org={selectedArticle.organization}
           onClose={handleCloseArticleModal} 
           isOpen={isArticleModalOpen} 
-          firstImageURL={firstImageURL}
           onImageChange={(imageFile, newImageURL) => {
-            handleImageChange(imageFile, newImageURL); // Update the image URL in the AdminBlog state
-            updateArticleImage(selectedArticle.id, newImageURL); // Update the image URL in the blogData state
+            handleImageChange(imageFile, newImageURL); 
+            updateArticleImage(selectedArticle.id, newImageURL); 
           }} 
           
         />
@@ -259,3 +251,9 @@ const AdminBlog = () => {
 };
 
 export default AdminBlog;
+
+
+
+
+
+

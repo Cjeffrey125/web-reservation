@@ -64,7 +64,7 @@ const ImageUploader = ({ onImageChange, imageURL }) => {
         Upload
       </button>
       {loading && <p>{uploadingMessage}</p>}
-      <img src={imageURLState} alt="Article Avatar" className="avatar" />
+      <img src={imageURLState} alt="Article Avatar" className="w-60 h-40 mt-2 object-cover" />
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { BsPencil } from 'react-icons/bs';
 import { faTimes, faSave } from '@fortawesome/free-solid-svg-icons';
 import ImageUploader from './imageUploader';
 
-const ArticleModal = ({ title, des, src, date, org, onClose, isOpen, onImageChange, firstImageURL}) => {
+const ArticleModal = ({ title, des, src, date, org, onClose, isOpen, onImageChange,}) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedDescription, setEditedDescription] = useState(des);
@@ -151,7 +151,7 @@ const ArticleModal = ({ title, des, src, date, org, onClose, isOpen, onImageChan
         ) : (
           <img
             className="w-full h-60 object-cover group-hover:scale-110 duration-300 cursor-pointer mr-24"
-            src={firstImageURL}
+            src={src}
             alt="src"
           />
         )}
