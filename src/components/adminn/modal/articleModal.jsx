@@ -4,7 +4,7 @@ import { db, auth, storage, ref, uploadBytes, getDownloadURL } from "../../../co
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BsPencil } from 'react-icons/bs';
 import { faTimes, faSave } from '@fortawesome/free-solid-svg-icons';
-import ImageUploader from './imageUploader';
+import ImageUploader from './articleImageUploader';
 import BirthdaySelector from "../../../constant/birthdaySelector";
 
 const ArticleModal = ({ title, des, imagePath, date, org, onClose, isOpen, onImageChange }) => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { uploadBytes, ref, getDownloadURL, auth, storage } from "../../../config/firebase";
 
-const ImageUploader = ({ onImageChange, imageURL }) => {
+const ArticleImageUploader = ({ onImageChange, imageURL }) => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [imageURLState, setImageURLState] = useState(""); // Initialize with an empty string
@@ -69,4 +69,4 @@ const ImageUploader = ({ onImageChange, imageURL }) => {
   );
 };
 
-export default ImageUploader;
+export default ArticleImageUploader;

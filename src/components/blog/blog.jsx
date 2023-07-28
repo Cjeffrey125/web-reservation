@@ -62,7 +62,7 @@ const Blog = () => {
         <div className="w-full h-[700px] rounded-2xl bg-center bg-cover duration-500" ref={slideshowRef}>
           <Link to={`/article/${blogData[currentIndex]?.ID}`} key={blogData[currentIndex]?.ID}>
             <div
-              className={`w-full h-full rounded-2xl bg-center bg-cover duration-500 ${
+              className={`w-full h-full rounded-2xl bg-center bg-cover duration-200 ${
                 isTransitioning ? 'opacity-0' : 'opacity-100'
               }`}
               style={{ backgroundImage: `url(${blogData[currentIndex]?.imagePath})` }}
