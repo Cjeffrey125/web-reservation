@@ -23,6 +23,8 @@ import AdminEvent from "./components/adminn/adminEvent"
 import AdminBlog from "./components/adminn/adminBlog"
 import AdminQuery from "./components/adminn/adminQuery"
 import BookEvents from "./components/user/bookEvents";
+import UserRegistration from "./components/adminn/userRegistration";
+import Analytics from "./components/adminn/analytics";
 
 
 
@@ -54,6 +56,8 @@ function App() {
           <Route path="/adminEvent" element={<AdminEvent />} />
           <Route path="/adminBlog" element={<AdminBlog />} />
           <Route path="/adminQuery" element={<AdminQuery />} />
+          <Route path="/user-registrations" element = {<UserRegistration/>} />
+          <Route path="/analytics" element={<Analytics/>} />
 
           
           <Route path="/book-events" element={<BookEvents/>} />
