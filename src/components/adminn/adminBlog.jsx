@@ -57,11 +57,13 @@ const AdminBlog = () => {
   };
 
   useEffect(() => {
-   
     const fetchArticles = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, 'articles'));
         const articles = querySnapshot.docs.map((doc) => doc.data());
+
+        articles.sort((a, b) => a.ID - b.ID);
+
         setBlogData(articles);
       } catch (error) {
         console.error('Error fetching articles:', error);
@@ -106,12 +108,12 @@ const AdminBlog = () => {
     }
   };
   const handleImageChange = (imageFile, newImageURL) => {
-    // Update the image data in the selectedArticle state when the user uploads a new image
+  
     setSelectedArticle((prevSelectedArticle) => ({
       ...prevSelectedArticle,
       src: newImageURL,
     }));
-    setCurrentImageURL(newImageURL); // Update the currentImageURL in the AdminBlog state
+    setCurrentImageURL(newImageURL); 
   };
   const updateArticleImage = (articleId, newImageURL) => {
     setBlogData((prevBlogData) =>

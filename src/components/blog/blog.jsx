@@ -1,13 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react';
-import BlogLayout from './blogLayout';
 import { Link } from 'react-router-dom';
-import { blogData } from '../../constant/blogData';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../config/firebase';
+import BlogLayout from './blogLayout';
 import images from '../../constant/images';
 
 const Blog = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const slideshowRef = useRef(null);
+  const [blogData, setBlogData] = useState([]);
+
+  useEffect(() => {
+    const fetchBlogData = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'articles'));
+        const data = querySnapshot.docs.map((doc) => ({ ID: doc.id, ...doc.data() }));
+        setBlogData(data);
+      } catch (error) {
+        console.error('Error fetching blog data:', error);
+      }
+    };
+    fetchBlogData();
+  }, []);
 
   useEffect(() => {
     const slideshowTimer = setTimeout(nextSlide, 2000);
@@ -45,29 +60,30 @@ const Blog = () => {
 
       <div className="max-w-[1400px] w-full m-auto py-12 px-4 relative">
         <div className="w-full h-[700px] rounded-2xl bg-center bg-cover duration-500" ref={slideshowRef}>
-          <Link to={`/article/${blogData[currentIndex].articlekey}`} key={blogData[currentIndex].articlekey}>
+          <Link to={`/article/${blogData[currentIndex]?.ID}`} key={blogData[currentIndex]?.ID}>
             <div
               className={`w-full h-full rounded-2xl bg-center bg-cover duration-500 ${
                 isTransitioning ? 'opacity-0' : 'opacity-100'
               }`}
-              style={{ backgroundImage: `url(${blogData[currentIndex].image})` }}
+              style={{ backgroundImage: `url(${blogData[currentIndex]?.imagePath})` }}
             ></div>
           </Link>
+           
         </div>
       </div>
 
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 xl:gap-14">
-          {blogData.map((article) => (
-            <Link to={`/article/${article.articlekey}`} key={article.articlekey}>
-              <BlogLayout
-                title={article.title}
-                des={article.description}
-                date={article.date}
-                org={article.organization}
-                src={article.image}
-              />
-            </Link>
+        {blogData.map((article) => (
+          <Link to={`/article/${article.ID}`} key={article.ID}>
+          <BlogLayout
+            title={article.title}
+            des={article.description}
+            date={article.date}
+            org={article.organization}
+            src={article.imagePath}
+          />
+        </Link>
           ))}
         </div>
       </div>

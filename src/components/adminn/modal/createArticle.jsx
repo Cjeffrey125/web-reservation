@@ -10,7 +10,7 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
   const [formData, setFormData] = useState({
     ID: '',
     title: '',
-    date: '', // Using only the "date" field
+    date: '',
     organization: '',
     description: '',
     imagePath: null, 
@@ -57,7 +57,7 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
 
     const updatedFormData = {
       ...formData,
-      date: publicationDate, // Use the formatted date
+      date: publicationDate, 
     };
     try {
       if (formData.imagePath) {
@@ -76,14 +76,11 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
     onClose();
     window.location.reload();
   };
-  
 
   const formatDateString = (day, month, year) => {
     if (!day || !month || !year) return '';
     return `${month} ${day}, ${year}`;
   };
-
-
 
 
   return (

@@ -49,7 +49,7 @@ const ArticleModal = ({ title, des, imagePath, date, org, onClose, isOpen, onIma
       };
   
       if (editedImageFile) {
-        const imageUrl = await handleImageUpload(editedImageFile, editedDate); // Pass the edited date to handleImageUpload
+        const imageUrl = await handleImageUpload(editedImageFile, editedDate); 
         updatedArticle.imagePath = imageUrl;
         setEditedImageFile(null);
       }
