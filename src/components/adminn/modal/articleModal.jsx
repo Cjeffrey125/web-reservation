@@ -4,7 +4,7 @@ import { db, auth, storage, ref, uploadBytes, getDownloadURL } from "../../../co
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BsPencil } from 'react-icons/bs';
 import { faTimes, faSave } from '@fortawesome/free-solid-svg-icons';
-import ImageUploader from './articleImageUploader';
+import ArticleImageUploader from './articleImageUploader';
 import BirthdaySelector from "../../../constant/birthdaySelector";
 
 const ArticleModal = ({ title, des, imagePath, date, org, onClose, isOpen, onImageChange }) => {
@@ -64,10 +64,8 @@ const ArticleModal = ({ title, des, imagePath, date, org, onClose, isOpen, onIma
   
         const articleRef = doc(db, 'articles', articleId);
         
-        // Update only the 'date' field in the document
         await updateDoc(articleRef, { date: editedDate });
-        
-        // Update the rest of the fields in the document
+    
         await updateDoc(articleRef, updatedArticle);
   
         setEditedTitle(updatedArticle.title);
@@ -157,21 +155,21 @@ const ArticleModal = ({ title, des, imagePath, date, org, onClose, isOpen, onIma
             <div className="divider mx-4"></div>
 
             <div className="image-container flex-1">
-  {isEditMode ? (
-    <ImageUploader
-      onImageChange={(imageFile, newImageURL) => {
-        handleNewImageChange(imageFile, newImageURL);
-      }}
-      imageURL={newImageURL || currentImageURL} 
-    />
-  ) : (
-    <img
-      className="w-full h-60 object-cover group-hover:scale-110 duration-300 cursor-pointer mr-24"
-      src={currentImageURL}
-      alt="src"
-    />
-  )}
-</div>
+            {isEditMode ? (
+              <ArticleImageUploader
+                onImageChange={(imageFile, newImageURL) => {
+                  handleNewImageChange(imageFile, newImageURL);
+                }}
+                imageURL={newImageURL || currentImageURL} 
+              />
+            ) : (
+              <img
+                className="w-full h-60 object-cover group-hover:scale-110 duration-300 cursor-pointer mr-24"
+                src={currentImageURL}
+                alt="src"
+              />
+            )}
+          </div>
       </div>
 
       <div className="date-container ">

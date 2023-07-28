@@ -4,12 +4,12 @@ import { uploadBytes, ref, getDownloadURL, auth, storage } from "../../../config
 const EventImageUploader = ({ onImageChange, imageURL }) => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [imageURLState, setImageURLState] = useState(""); // Initialize with an empty string
-  const [uploadingMessage, setUploadingMessage] = useState(""); // State to display uploading message
+  const [imageURLState, setImageURLState] = useState(""); 
+  const [uploadingMessage, setUploadingMessage] = useState(""); 
 
   useEffect(() => {
     if (imageURL) {
-      setImageURLState(imageURL); // Update the state with imageURL only if it's available
+      setImageURLState(imageURL);
     } else {
       setImageURLState("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
     }
@@ -32,8 +32,8 @@ const EventImageUploader = ({ onImageChange, imageURL }) => {
 
     try {
       const imageURL = await handleImageUpload(image);
-      setImageURLState(imageURL); // Use setImageURLState instead of setImageURL
-      onImageChange(image, imageURL); // Pass the new image URL to the onImageChange function
+      setImageURLState(imageURL); 
+      onImageChange(image, imageURL); 
     } catch (error) {
       console.error("Error uploading image:", error);
     }

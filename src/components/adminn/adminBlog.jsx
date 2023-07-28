@@ -21,7 +21,6 @@ const AdminBlog = () => {
 
   const handleOpenArticleModal = (articleData) => {
     if (articleData) {
-  
       setSelectedArticle(articleData);
       setCurrentImageURL(articleData.src || '');
     } else {
@@ -219,7 +218,9 @@ const AdminBlog = () => {
 
 
       {showModal && (
-        <CreateArticle show={showModal} onClose={handleCloseModal} onSaveArticle={handleSaveArticle} />
+        <CreateArticle show={showModal} 
+        onClose={handleCloseModal} 
+        onSaveArticle={handleSaveArticle} />
       )}
 
       {selectedArticle && (

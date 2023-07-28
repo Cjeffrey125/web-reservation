@@ -1,30 +1,123 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BsPencil, BsX } from 'react-icons/bs';
-import {eventData} from '../../constant/eventData';
+import { collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { db } from '../../config/firebase';
+import CreateEvent from './modal/createEvent';
+import EventModal from './modal/eventModal';
+import ConfirmationModal from './modal/confirmationModal';
 
 const AdminEvent = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [isEditClicked, setEditClicked] = useState({});
   const [isDeleteClicked, setDeleteClicked] = useState({});
+  const [showCreateEvent, setShowCreateEvent] = useState(false);
+  const [eventData, setEventData] = useState([]);
+  const [eventToDelete, setEventToDelete] = useState(null);
+
+  const [isEventModalOpen, setEventModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [currentImageURL, setCurrentImageURL] = useState(null);
+  
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'events'));
+        const events = querySnapshot.docs.map((doc) => doc.data());
+
+        events.sort((a, b) => a.ID - b.ID);
+
+        setEventData(events);
+      } catch (error) {
+        console.error('Error fetching articles:', error);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+
+  const handleSaveEvent = async (eventData) => {
+    try {
+      
+      console.log('Article data to be saved:', eventData);
+    } catch (error) {
+      console.error('Error saving article data:', error);
+    }
+  };
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
-  const handleEditClick = (articleId) => {
+  const handleCreateEvent = () => {
+    setShowCreateEvent(true); // Set the state to true to open the modal
+  };
+
+  const handleEditClick = (eventId) => {
     setEditClicked((prev) => ({
       ...prev,
-      [articleId]: !prev[articleId],
+      [eventId]: !prev[eventId],
     }));
   };
 
-  const handleDeleteClick = (articleId) => {
-    setDeleteClicked((prev) => ({
-      ...prev,
-      [articleId]: !prev[articleId],
-    }));
+  const handleDeleteClick = (eventId) => {
+    setEventToDelete(eventId);
   };
 
+  const handleConfirmDelete = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'events'));
+      const documentIdToDelete = querySnapshot.docs.find((doc) => doc.data().ID === eventToDelete)?.id;
+  
+      if (documentIdToDelete) {
+        await deleteDoc(doc(db, 'events', documentIdToDelete));
+        setEventData((prevEventData) =>
+          prevEventData.filter((event) => event.ID !== eventToDelete)
+        );
+
+        setEventToDelete(null); 
+      } else {
+        console.warn('Article not found with the specified ID:', eventToDelete);
+      }
+    } catch (error) {
+      console.error('Error deleting article:', error);
+    }
+  };
+
+  const handleOpenEventModal = (eventData) => {
+    if (eventData) {
+      setSelectedEvent(eventData);
+      setCurrentImageURL(eventData.src || '');
+    } else {
+    
+      setSelectedEvent(null);
+      setCurrentImageURL(''); 
+    }
+    setEventModalOpen(true);
+  };
+
+  const handleCloseEventModal = () => {
+    setSelectedEvent(null);
+    setEventModalOpen(false);
+  };
+
+  const handleImageChange = (imageFile, newImageURL) => {
+  
+    setSelectedEvent((prevSelectedEvent) => ({
+      ...prevSelectedEvent,
+      src: newImageURL,
+    }));
+    setCurrentImageURL(newImageURL); 
+  };
+  const updateEventImage = (eventId, newImageURL) => {
+    setEventData((prevEventData) =>
+      prevEventData.map((event) =>
+        event.ID === eventId ? { ...event, src: newImageURL } : event
+      )
+    );
+  };
+
+ 
 
   return (
     <div className="shadow-md rounded-lg p-4" style={{ borderRadius: '35px' }}>
@@ -36,9 +129,13 @@ const AdminEvent = () => {
             <path d="M0 0h24v24H0z" fill="none" />
           </svg>
           <input type="text" placeholder="Search Events" style={{ border: 'none', outline: 'none', backgroundColor: '#EDEDED', borderRadius: '25px', paddingLeft: '30px', height: '3rem', width: '250px' }} />
-          <button className="px-4 py-2 rounded-md text-white" style={{ backgroundColor: '#525353', color: '#e9e9e8' }}>
-            + Create Event
-          </button>
+          <button
+          className="px-4 py-2 rounded-md text-white"
+          style={{ backgroundColor: '#525353', color: '#e9e9e8' }}
+          onClick={handleCreateEvent} 
+        >
+          + Create Event
+        </button>
         </div>
       </div>
 
@@ -72,15 +169,15 @@ const AdminEvent = () => {
           <tbody style={{ backgroundColor: 'rgba(252, 252, 252)' }}>
             {eventData.map((event) => (
               <tr key={event.eventID}>
-                <td className="border-b p-2 text-center">{event.eventKey}</td>
+                <td className="border-b p-2 text-center">{event.ID}</td>
                 <td className="border-b p-2 text-center" style={{ color: '#00008B' }}>
                   {event.title}
                 </td>
                 <td className="border-b p-2 text-center">{event.organization}</td>
-                <td className="border-b p-2 text-center">{event.date_time}</td>
+                <td className="border-b p-2 text-center">{event.date}</td>
                 <td className="border-b p-2 text-center">
                   <div style={{ backgroundColor: '#a3f294', color: '#8c8c8c', padding: '0.5rem 1rem', borderRadius: '5px', width: 'fit-content', margin: 'auto' }}>
-                    {event.published_date}
+                    {event.dateCreated}
                   </div>
                 </td>
                 <td className="border-b p-2 text-center">
@@ -88,14 +185,14 @@ const AdminEvent = () => {
                     className="mr-2"
                     title="Edit"
                     style={{
-                      backgroundColor: isEditClicked[event.eventKey] ? '#000101' : 'white',
+                      backgroundColor: isEditClicked[event.ID] ? '#000101' : 'white',
                       borderRadius: '50%',
                     }}
-                    onClick={() => handleEditClick(event.eventKey)}
+                    onClick={() => handleOpenEventModal(event)}
                   >
                     <BsPencil
                       size={20}
-                      color={isEditClicked[event.eventKey] ? '#e9e9e8' : '#525353'}
+                      color={isEditClicked[event.ID] ? '#e9e9e8' : '#525353'}
                     />
                   </button>
                   <button
@@ -104,7 +201,7 @@ const AdminEvent = () => {
                       backgroundColor: isDeleteClicked[event.eventKey] ? '#000101' : 'white',
                       borderRadius: '50%',
                     }}
-                    onClick={() => handleDeleteClick(event.eventKey)}
+                    onClick={() => handleDeleteClick(event.ID)} 
                   >
                     <BsX
                       size={20}
@@ -117,6 +214,51 @@ const AdminEvent = () => {
           </tbody>
         </table>
       </div>
+
+      {showCreateEvent && (
+        <CreateEvent
+          show={showCreateEvent}
+          onClose={() => setShowCreateEvent(false)}
+          onSaveEvent={handleSaveEvent} 
+        />
+      )}
+
+      {selectedEvent && (
+        <EventModal
+          eventId={selectedEvent.id}
+          date={selectedEvent.date}
+          eventCreated={selectedEvent.dateCreated}
+          des={selectedEvent.description}
+          genre1={selectedEvent.genre1}
+          genre2={selectedEvent.genre2}   
+          imagePath={selectedEvent.imagePath}
+          limit={selectedEvent.limit}
+          location={selectedEvent.location}
+          org={selectedEvent.organization}
+          price={selectedEvent.price}
+          time={selectedEvent.time}
+          host={selectedEvent.host}
+          title={selectedEvent.title}
+
+          onClose={handleCloseEventModal} 
+          isOpen={isEventModalOpen}
+
+
+          onImageChange={(imageFile, newImageURL) => {
+            handleImageChange(imageFile, newImageURL); 
+            updateEventImage(selectedEvent.id, newImageURL); 
+          }} 
+          
+        />
+      )}
+
+      {eventToDelete && (
+      <ConfirmationModal
+        closeModal={() => setEventToDelete(null)}
+        openModal={!!eventToDelete}
+        onConfirmDelete={handleConfirmDelete}
+      />
+      )}
     </div>
   );
 };

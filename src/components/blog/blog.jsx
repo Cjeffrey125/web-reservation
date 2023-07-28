@@ -4,6 +4,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import BlogLayout from './blogLayout';
 import images from '../../constant/images';
+import BlogDetails from './blogDetails';
 
 const Blog = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -77,6 +78,7 @@ const Blog = () => {
         {blogData.map((article) => (
           <Link to={`/article/${article.ID}`} key={article.ID}>
           <BlogLayout
+            id={article.ID}
             title={article.title}
             des={article.description}
             date={article.date}
@@ -85,9 +87,13 @@ const Blog = () => {
           />
         </Link>
           ))}
+
+  
         </div>
       </div>
     </section>
+
+   
   );
 };
 

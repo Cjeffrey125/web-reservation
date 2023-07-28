@@ -4,7 +4,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import BirthdaySelector from '../../../constant/birthdaySelector';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth, storage, ref, uploadBytes, getDownloadURL } from '../../../config/firebase'; 
-import ImageUploader from './articleImageUploader';
+import ArticleImageUploader from './articleImageUploader';
 
 const CreateArticle = ({ show, onClose, onSaveArticle }) => {
   const [formData, setFormData] = useState({
@@ -150,7 +150,7 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
           </div>
 
           <div>
-            <ImageUploader onImageChange={handleImageChange}  />
+          <ArticleImageUploader onImageChange={handleImageChange}  />
           </div>
 
           <div>

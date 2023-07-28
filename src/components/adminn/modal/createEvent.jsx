@@ -4,29 +4,29 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import BirthdaySelector from '../../../constant/birthdaySelector';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth, storage, ref, uploadBytes, getDownloadURL } from '../../../config/firebase'; 
-import ImageUploader from './articleImageUploader';
+import EventImageUploader from './eventImageUploader';
 
-const CreateArticle = ({ show, onClose, onSaveArticle }) => {
+const CreateEvent = ({ show, onClose }) => {
   const [formData, setFormData] = useState({
     ID: '',
     title: '',
     location: '',
     date: '',
     time: '',
-    genre: '',
+    genre1: '',
+    genre2: '',
     organization: '',
     limit: '',
     price: '',
     description: '',
     imagePath: null, 
-    dateCreated: '',
-   
+    dateCreated: '', // Updated to include the date created
+    host: '',
   });
 
   const [selectedDay, setSelectedDay] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,7 +46,7 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
   const handleImageUpload = async (imageFile) => {
     try {
       const user = auth.currentUser;
-      const storageRef = ref(storage, `articleimages/${user.uid}/${imageFile.name}`);
+      const storageRef = ref(storage, `eventimages/${user.uid}/${imageFile.name}`);
       await uploadBytes(storageRef, imageFile);
       const downloadURL = await getDownloadURL(storageRef);
       return downloadURL; 
@@ -64,6 +64,7 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
     const updatedFormData = {
       ...formData,
       date: publicationDate, 
+      dateCreated: getCurrentDate(), // Set the dateCreated field to the current date
     };
     try {
       if (formData.imagePath) {
@@ -71,12 +72,11 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
         updatedFormData.imagePath = imageUrl;
       }
 
-      onSaveArticle(updatedFormData);
-
-      const docRef = await addDoc(collection(db, 'articles'), updatedFormData);
-      console.log('Article data saved with ID:', docRef.id);
+      // Save the event data to Firebase collection named 'events'
+      const docRef = await addDoc(collection(db, 'events'), updatedFormData);
+      console.log('Event data saved with ID:', docRef.id);
     } catch (error) {
-      console.error('Error saving article data:', error);
+      console.error('Error saving event data:', error);
     }
 
     onClose();
@@ -86,6 +86,14 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
   const formatDateString = (day, month, year) => {
     if (!day || !month || !year) return '';
     return `${month} ${day}, ${year}`;
+  };
+
+  const getCurrentDate = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
 
@@ -122,6 +130,18 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
           </div>
 
           <div>
+            <label>Location</label>
+            <input
+              className='border-black border-opacity-40 p-2 rounded pl-10 border w-full bg-transparent'
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="flex mb-4">
+            <div className="w-1/2 mr-2">
             <label>Date</label>
             <BirthdaySelector
               selectedDay={selectedDay}
@@ -132,8 +152,44 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
               setSelectedYear={setSelectedYear}
             />
           </div>
+          <div className='ml-24 mt-1 flex flex-col'>
+          <label>Time</label>
+          <input
+            className="block appearance-none w-1/1 bg-transparent border border-gray-400 px-2 py-1 rounded-full focus:outline-none focus:border-black text-lg"
+            type="time"
+            name="time"
+            value={formData.time}
+            onChange={handleChange}
+          />
+        </div>
+          </div>
 
-          <div>
+          <div className="flex mb-4">
+            <div className="w-1/2 mr-2">
+              <label className="block">Genres</label>
+              <input
+                className='border-black border-opacity-40 p-2 rounded pl-10 border w-full bg-transparent'
+                type="text"
+                name="genre1"
+                value={formData.genre1}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="w-1/2">
+              <input
+                className='mt-6 border-black border-opacity-40 p-2 rounded pl-10 border w-full bg-transparent'
+                type="text"
+                name="genre2"
+                value={formData.genre2}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+         
+
+          <div className="flex mb-4">
+          <div className='mr-2'>
             <label>Organization</label>
             <input
               className='border-black border-opacity-40 p-2 rounded pl-10 border w-full bg-transparent'
@@ -142,6 +198,27 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
               value={formData.organization}
               onChange={handleChange}
             />
+          </div>
+            <div className="mr-2 w-1/3">
+            <label>Limit</label>
+            <input
+              className='border-black border-opacity-40 p-2 rounded pl-10 border w-full bg-transparent'
+              type="number"
+              name="limit"
+              value={formData.limit}
+              onChange={handleChange}
+            />
+          </div>
+          <div className='mr-2 w-1/3'>
+            <label>Price</label>
+            <input
+              className='border-black border-opacity-40 p-2 rounded pl-10 border w-full bg-transparent'
+              type="text"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+            />
+          </div>
           </div>
 
           <div>
@@ -156,7 +233,18 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
           </div>
 
           <div>
-            <ImageUploader onImageChange={handleImageChange}  />
+            <label>Host</label>
+            <textarea
+              className='border-black border-opacity-40 p-2 rounded pl-10 border w-full bg-transparent'
+              rows={4}
+              name="host"
+              value={formData.host}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className='ml-12 flex justify-center items-center'>
+            <EventImageUploader onImageChange={handleImageChange} />
           </div>
 
           <div>
@@ -169,4 +257,4 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
   );
 };
 
-export default CreateArticle;
+export default CreateEvent;
