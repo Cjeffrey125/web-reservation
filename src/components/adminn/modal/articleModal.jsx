@@ -5,8 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BsPencil } from 'react-icons/bs';
 import { faTimes, faSave } from '@fortawesome/free-solid-svg-icons';
 import ImageUploader from './imageUploader';
+import BirthdaySelector from "../../../constant/birthdaySelector";
 
-const ArticleModal = ({ title, des, src, date, org, onClose, isOpen, onImageChange,}) => {
+const ArticleModal = ({ title, des, imagePath, date, org, onClose, isOpen, onImageChange }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedDescription, setEditedDescription] = useState(des);
@@ -14,14 +15,25 @@ const ArticleModal = ({ title, des, src, date, org, onClose, isOpen, onImageChan
   const [editedOrganization, setEditedOrganization] = useState(org);
   const [editedImageFile, setEditedImageFile] = useState(null);
   const [currentImageURL, setCurrentImageURL] = useState(null);
+  const [newImageURL, setNewImageURL] = useState(null);
+
+
+  const [selectedDay, setSelectedDay] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
 
   useEffect(() => {
-    const storedImageURL = localStorage.getItem("currentImageURL");
-    setCurrentImageURL(storedImageURL || src);
-    return () => {
-      localStorage.removeItem("currentImageURL");
-    };
-  }, [src]);
+    setCurrentImageURL(imagePath);
+
+    if (isOpen && date) {
+      const [month, dayYear] = date.split(' ');
+      const [day, year] = dayYear.split(', ');
+      setSelectedMonth(month);
+      setSelectedDay(day);
+      setSelectedYear(year);
+      setEditedDate(date); 
+    }
+  }, [imagePath, isOpen, date]);
 
   const handleEditClick = () => {
     setIsEditMode(true);
@@ -32,52 +44,52 @@ const ArticleModal = ({ title, des, src, date, org, onClose, isOpen, onImageChan
       const updatedArticle = {
         title: editedTitle,
         description: editedDescription,
-        date: editedDate,
         organization: editedOrganization,
+        imagePath: newImageURL || imagePath,
       };
-
+  
       if (editedImageFile) {
-        const imageUrl = await handleImageUpload(editedImageFile);
-        updatedArticle.src = imageUrl;
+        const imageUrl = await handleImageUpload(editedImageFile, editedDate); // Pass the edited date to handleImageUpload
+        updatedArticle.imagePath = imageUrl;
         setEditedImageFile(null);
-      } else {
-        updatedArticle.src = currentImageURL;
       }
-
+  
       const querySnapshot = await getDocs(collection(db, 'articles'));
       const matchingArticle = querySnapshot.docs.find(
         (doc) => doc.data().title === title && doc.data().description === des
       );
-
+  
       if (matchingArticle) {
         const articleId = matchingArticle.id;
-
+  
         const articleRef = doc(db, 'articles', articleId);
+        
+        // Update only the 'date' field in the document
+        await updateDoc(articleRef, { date: editedDate });
+        
+        // Update the rest of the fields in the document
         await updateDoc(articleRef, updatedArticle);
-
+  
         setEditedTitle(updatedArticle.title);
         setEditedDescription(updatedArticle.description);
-        setEditedDate(updatedArticle.date);
         setEditedOrganization(updatedArticle.organization);
-
-        setCurrentImageURL(updatedArticle.src);
-        localStorage.setItem("currentImageURL", updatedArticle.src);
+        setCurrentImageURL(updatedArticle.imagePath);
       } else {
         console.error('Article not found with matching title and description.');
       }
     } catch (error) {
       console.error('Error updating article:', error);
     }
-
+  
     setIsEditMode(false);
     window.location.reload();
-    
   };
 
   const handleImageChange = (imageFile, newImageURL) => {
     setEditedImageFile(imageFile);
     setCurrentImageURL(newImageURL);
-    onImageChange(imageFile, newImageURL); // Pass the new image URL to the parent component
+    onImageChange(imageFile, newImageURL); 
+    setNewImageURL(newImageURL);
   };
 
   const handleImageUpload = async (imageFile) => {
@@ -95,6 +107,10 @@ const ArticleModal = ({ title, des, src, date, org, onClose, isOpen, onImageChan
       console.error("Error uploading image:", error);
       throw error;
     }
+  };
+
+  const handleNewImageChange = (imageFile, newImageURL) => {
+    setNewImageURL(newImageURL);
   };
   
   return (
@@ -141,32 +157,34 @@ const ArticleModal = ({ title, des, src, date, org, onClose, isOpen, onImageChan
             <div className="divider mx-4"></div>
 
             <div className="image-container flex-1">
-        {isEditMode ? (
-          <ImageUploader
-            onImageChange={(imageFile, newImageURL) => {
-              onImageChange(imageFile, newImageURL); // Pass the new image URL to the parent component
-            }}
-            imageURL={currentImageURL}
-          />
-        ) : (
-          <img
-            className="w-full h-60 object-cover group-hover:scale-110 duration-300 cursor-pointer mr-24"
-            src={src}
-            alt="src"
-          />
-        )}
-      </div>
+  {isEditMode ? (
+    <ImageUploader
+      onImageChange={(imageFile, newImageURL) => {
+        handleNewImageChange(imageFile, newImageURL);
+      }}
+      imageURL={newImageURL || currentImageURL} 
+    />
+  ) : (
+    <img
+      className="w-full h-60 object-cover group-hover:scale-110 duration-300 cursor-pointer mr-24"
+      src={currentImageURL}
+      alt="src"
+    />
+  )}
+</div>
       </div>
 
-          <div className="date-container ">
-            {isEditMode ? (
-              <div>
-                <input
-                  className="ml-12 text-sm tracking-wide mt-3 hover:text-gray-700 duration-300"
-                  type="text"
-                  value={editedDate}
-                  onChange={(e) => setEditedDate(e.target.value)}
-                />
+      <div className="date-container ">
+        {isEditMode ? (
+          <div>
+            <BirthdaySelector
+              selectedDay={selectedDay}
+              setSelectedDay={setSelectedDay}
+              selectedMonth={selectedMonth}
+              setSelectedMonth={setSelectedMonth}
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+            />
                 <input
                   className="ml-12 text-sm tracking-wide mt-3 hover:text-gray-700 duration-300"
                   type="text"

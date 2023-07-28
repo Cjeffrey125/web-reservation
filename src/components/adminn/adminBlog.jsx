@@ -176,7 +176,7 @@ const AdminBlog = () => {
                 <td className="border-b text-center">{article.organization}</td>
                 <td className="border-b p-2" style={{ textAlign: 'center' }}>
                   <div style={{ backgroundColor: '#a3f294', color: '#8c8c8c', padding: '0.5rem 1rem', borderRadius: '5px', width: 'fit-content', margin: 'auto' }}>
-                    {article.publicationDate}
+                    {article.date}
                   </div>
                 </td>
                 <td className="border-b p-2 text-center">
@@ -225,7 +225,7 @@ const AdminBlog = () => {
           articleId={selectedArticle.id}
           title={selectedArticle.title}
           des={selectedArticle.description}
-          src={currentImageURL}
+          imagePath={selectedArticle.imagePath}
           date={selectedArticle.date}
           org={selectedArticle.organization}
           onClose={handleCloseArticleModal} 

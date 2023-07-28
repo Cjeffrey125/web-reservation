@@ -11,6 +11,7 @@ const Contact = () => {
     name: '',
     email: '',
     message: '',
+    status:'No Reply',
   });
 
   const [showModal, setShowModal] = useState(false); 

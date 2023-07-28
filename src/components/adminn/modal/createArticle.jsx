@@ -10,11 +10,11 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
   const [formData, setFormData] = useState({
     ID: '',
     title: '',
-    date: '',
+    date: '', // Using only the "date" field
     organization: '',
     description: '',
-    image: null,
-    publicationDate: '',
+    imagePath: null, 
+   
   });
 
   const [selectedDay, setSelectedDay] = useState('');
@@ -33,7 +33,7 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
   const handleImageChange = (imageFile) => {
     setFormData((prevData) => ({
       ...prevData,
-      image: imageFile,
+      imagePath: imageFile,
     }));
   };
   
@@ -54,27 +54,25 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
     e.preventDefault();
   
     const publicationDate = formatDateString(selectedDay, selectedMonth, selectedYear);
-  
+
     const updatedFormData = {
       ...formData,
-      publicationDate: publicationDate,
-      date: `${selectedMonth} ${selectedDay}, ${selectedYear}`,
+      date: publicationDate, // Use the formatted date
     };
-  
     try {
-      if (formData.image) {
-        const imageUrl = await handleImageUpload(formData.image);
-        updatedFormData.image = imageUrl; 
+      if (formData.imagePath) {
+        const imageUrl = await handleImageUpload(formData.imagePath);
+        updatedFormData.imagePath = imageUrl;
       }
-  
+
       onSaveArticle(updatedFormData);
-  
+
       const docRef = await addDoc(collection(db, 'articles'), updatedFormData);
       console.log('Article data saved with ID:', docRef.id);
     } catch (error) {
       console.error('Error saving article data:', error);
     }
-  
+
     onClose();
     window.location.reload();
   };
@@ -86,7 +84,6 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
   };
 
 
-  
 
 
   return (
@@ -156,12 +153,7 @@ const CreateArticle = ({ show, onClose, onSaveArticle }) => {
           </div>
 
           <div>
-        
             <ImageUploader onImageChange={handleImageChange}  />
-          </div>
-
-          <div>
-            {formData.publicationDate && <p>Publication Date: {formData.publicationDate}</p>}
           </div>
 
           <div>

@@ -20,7 +20,7 @@ const BirthdaySelector = ({ selectedDay, setSelectedDay, selectedMonth, setSelec
     { value: 'November', label: 'November' },
     { value: 'December', label: 'December' },
   ];
-  const years = Array.from({ length: 100 }, (_, index) => 2023 - index);
+  const years = Array.from({ length: 100 }, (_, index) => 2024 - index);
 
   return (
     <div className="w-72 font-medium ">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, doc, setDoc} from 'firebase/firestore'; 
+import { collection, getDocs, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import ReplyModal from './modal/replyModal';
 
@@ -7,6 +7,7 @@ const AdminQuery = () => {
   const [queries, setQueries] = useState([]);
   const [showReplyModal, setShowReplyModal] = useState(false);
   const [selectedQuery, setSelectedQuery] = useState({});
+  const [unrespondedCount, setUnrespondedCount] = useState(0); 
 
   const fetchQueries = async () => {
     try {
@@ -19,41 +20,50 @@ const AdminQuery = () => {
   };
 
   useEffect(() => {
-
     fetchQueries();
   }, []);
 
+  useEffect(() => {
+    const unrespondedQueries = queries.filter((query) => query.status === 'No Reply');
+    setUnrespondedCount(unrespondedQueries.length);
+  }, [queries]);
 
   const handleOpenReplyModal = (query) => {
     setSelectedQuery(query);
     setShowReplyModal(true);
   };
 
-
-  const handleCloseReplyModal = async () => {
+  const handleCloseReplyModal = () => {
     setShowReplyModal(false);
-  
-  
-    if (selectedQuery.status !== 'Responded') {
-      await updateStatus(selectedQuery.id);
-    }
-  
-    fetchQueries();
   };
 
   const updateStatus = async (queryId) => {
     try {
       const queryRef = doc(db, 'queries', queryId);
-      await setDoc(queryRef, { status: 'Responded' }, { merge: true });
+      await updateDoc(queryRef, { status: 'Responded', respondedAt: serverTimestamp() });
     } catch (error) {
       console.error('Error updating status:', error);
     }
   };
 
+  const handleSend = async (message) => {
+    console.log(`Message to: ${selectedQuery.name} (${selectedQuery.email})`);
+    console.log('Message content:', message);
+
+ 
+    const updatedQuery = {
+      ...selectedQuery,
+      status: 'Responded',
+      respondedAt: new Date().toISOString(), 
+    };
+
+    await updateStatus(selectedQuery.id);
+    setShowReplyModal(false);
+    fetchQueries();
+  };
   return (
+    
     <div className="shadow-md rounded-lg p-4" style={{ borderRadius: '35px' }}>
-
-
       <div className="flex justify-center overflow-y-scroll">
         <table className="w-3/4 mt-4 border rounded mb-8" style={{ borderColor: 'rgba(224, 224, 224, 0.7)' }}>
           <thead style={{ backgroundColor: 'rgba(224, 224, 224, 0.7)' }}>
@@ -90,9 +100,7 @@ const AdminQuery = () => {
                   </div>
                 </td>
                 <td className="border-b p-2 text-center">
-                  <button onClick={() => handleOpenReplyModal(query)}>
-                    📩
-                  </button>
+                  <button onClick={() => handleOpenReplyModal(query)}>📩</button>
                 </td>
               </tr>
             ))}
@@ -101,13 +109,15 @@ const AdminQuery = () => {
       </div>
 
       {showReplyModal && (
+       
         <ReplyModal
-        closeModal={handleCloseReplyModal}
-        senderName={selectedQuery.name}
-        senderEmail={selectedQuery.email}
-        updateStatus={() => updateStatus(selectedQuery.id)} 
-      />
+          closeModal={handleCloseReplyModal}
+          query={selectedQuery} // Pass the entire selectedQuery object
+          onSend={handleSend}
+        />
       )}
+
+      
     </div>
   );
 };

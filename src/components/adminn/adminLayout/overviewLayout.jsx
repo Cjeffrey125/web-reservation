@@ -1,9 +1,40 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faUser, faTicket, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { collection, getDocs, where, query, onSnapshot } from 'firebase/firestore';
+import { db } from '../../../config/firebase';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendar, faUser, faTicket } from '@fortawesome/free-solid-svg-icons';
 
 const OverViewLayout = () => {
+  const [unansweredConcernsCount, setUnansweredConcernsCount] = useState(0);
+  const [totalQueries, setTotalQueries] = useState(0);
+
+  useEffect(() => {
+    const fetchUnansweredConcerns = async () => {
+      try {
+        const respondedQuery = query(collection(db, 'queries'), where('status', '==', 'Responded'));
+        const unansweredQuery = query(collection(db, 'queries'), where('status', '==', 'No Reply'));
+
+        const [respondedSnapshot, unansweredSnapshot, allQueriesSnapshot] = await Promise.all([
+          getDocs(respondedQuery),
+          getDocs(unansweredQuery),
+          getDocs(collection(db, 'queries')), // Fetch all queries to get the total count
+        ]);
+
+        const respondedCount = respondedSnapshot.size;
+        const unansweredCount = unansweredSnapshot.size;
+        const totalCount = allQueriesSnapshot.size;
+
+        setUnansweredConcernsCount(unansweredCount);
+        setTotalQueries(totalCount);
+      } catch (error) {
+        console.error('Error fetching concerns:', error);
+      }
+    };
+
+    fetchUnansweredConcerns();
+  }, []);
+
   return (
     <div className="w-full xl:px-12 h-auto xl:py-8">
       <div className="flex flex-col items-left">
@@ -26,12 +57,12 @@ const OverViewLayout = () => {
           </div>
         </Link>
 
-        <Link to="/ticket-sales" className="border rounded-lg p-2 border-gray-400 hover:border-black hover:text-black flex items-center mt-4">
+        <Link to="/adminQuery" className="border rounded-lg p-2 border-gray-400 hover:border-black hover:text-black flex items-center mt-4">
           <FontAwesomeIcon icon={faTicket} className="text-4xl" style={{ color: '#5d5be5', fontSize: '60px' }} />
           <span style={{ fontSize: '60px', margin: '10px 10px', color: '#b6b7b6' }}>|</span>
           <div>
-            <h1 className='ml-16' style={{ display: 'block' }}>101</h1>
-            <p className='ml-10' style={{ display: 'block' }}>Ticket Sales</p>
+          <h1 className='ml-16' style={{ display: 'block' }}>{unansweredConcernsCount}</h1>
+        <p className='ml-10' style={{ display: 'block' }}>Concerns</p>
           </div>
         </Link>
 

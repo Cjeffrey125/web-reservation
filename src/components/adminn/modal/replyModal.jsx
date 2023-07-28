@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
-import {useUserAuth } from '../../context/authContext';
+import { useUserAuth } from '../../context/authContext';
 
-const ReplyModal = ({ closeModal, senderName, senderEmail }) => {
-    const [message, setMessage] = useState('');
-    const { user } = useUserAuth();
+const ReplyModal = ({ closeModal, query, onSend }) => {
+  const [message, setMessage] = useState('');
+  const { user } = useUserAuth();
 
   const handleInputChange = (e) => {
     setMessage(e.target.value);
   };
 
   const handleSend = () => {
-  
-    console.log(`Message to: ${senderName} (${senderEmail})`);
+    console.log(`Message to: ${query.name} (${query.email})`);
     console.log('Message content:', message);
 
-
+    onSend(message);
     closeModal();
   };
 
@@ -23,8 +22,8 @@ const ReplyModal = ({ closeModal, senderName, senderEmail }) => {
       <div className="bg-white w-96 p-6 rounded-lg shadow-md relative">
         <h1 className="text-2xl font-bold mb-4">Reply to Concern</h1>
         <p className="mb-4">From: {user.email}</p>
-        <p className="mb-4">To: {senderName}</p>
-        <p className="mb-4">Email: {senderEmail}</p>
+        <p className="mb-4">To: {query.name}</p>
+        <p className="mb-4">Email: {query.email}</p>
         <textarea
           className="w-full h-32 bg-gray-100 rounded-lg p-2 mb-4"
           placeholder="Enter your reply here..."
