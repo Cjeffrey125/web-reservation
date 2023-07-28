@@ -43,22 +43,22 @@ const Booking = ({ isOpen, onClose }) => {
   return (
     <>
       {isOpen && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-75 z-50">
-          <div className="bg-white w-full max-w-6xl p-6 rounded-lg relative" style={{ maxHeight: '880px' }}>
+        <div className="fixed inset-0 flex justify-center items-center backdrop-filter backdrop-blur-sm z-50" style = {{backgroundColor: 'rgba(0, 0, 0, 0.5)'}}> 
+          <div className=" w-full max-w-6xl p-6 rounded-lg relative" style={{ maxHeight: '880px', backgroundColor: '#F5F5F5'}}>
             <button
-              className="absolute top-0 right-0 m-3 p-2 border-b-gray-500 text-black hover:text-gray-700 hover:bg-red-500 bg-transparent"
+              className="absolute top-10 right-0 m-3 p-2 border-b-gray-500 text-black hover:text-gray-700 hover:bg-red-500 bg-transparent"
               onClick={closeModal}
             >
               <FontAwesomeIcon icon={faTimes} />
             </button>
 
-            <div className="grid grid-cols-3 grid-rows-2 gap-4 h-screen">
-              <div className="image-container flex items-center justify-center bg-gray-200">
-                <img className="max-w-full max-h-full object-contain" src={eventInfo.image} alt="Event Image" />
+            <div className="grid grid-cols-3 grid-rows-2 gap-4 h-screen mt-10">
+              <div className="image-container flex items-center justify-center">
+                <img className="max-w-full max-h-full object-contain -mb-20" src={eventInfo.image} alt="Event Image" />
               </div>
 
-              <div className="info-container flex items-center justify-center bg-gray-300">
-                <div className="col-span-2 p-6">
+              <div className="info-container flex items-center justify-center">
+                <div className="col-span-2 p-6 -mb-20">
                   <h1 className="text-2sm font-bold">{eventInfo.title}</h1>
                   <div className="flex items-center mt-2">
                     <FontAwesomeIcon icon={faLocationDot} className="mr-2" />
@@ -108,7 +108,7 @@ const Booking = ({ isOpen, onClose }) => {
 
               <div className="payment-container flex items-start justify-center">
                 {isDefaultPaymentVisible && (
-                  <div className="payment-container h-[168%] w-full border-2 rounded-lg border-gray-500 mt-10 flex flex-col">
+                  <div className="payment-container h-[168%] w-full border-1.5 rounded-lg mt-10 flex flex-col bg-white shadow-lg">
                     <h1 className="payment-title text-2xl mt-4 ml-4">Payment Summary</h1>
                     <div className="empty-content flex flex-col items-center justify-center flex-1">
                     <MdOutlineReceiptLong className="payment-icon-svg text-8xl text-green-500" />

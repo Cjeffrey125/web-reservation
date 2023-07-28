@@ -56,10 +56,10 @@ const EventDetails = () => {
   
   return (
     <section>
-      <div className="container mx-auto min-h-[300px] mb-14 ">
+      <div className="container mx-auto min-h-[300px] mb-14">
         <div className="flex flex-wrap justify-left lg:flex-nowrap">
-          <div className="container mx-auto mt-32 flex flex-wrap justify-left md:flex-nowrap">
-            <div className="w-full md:w-80 h-auto bg-gray-300 rounded-lg overflow-hidden mb-6 md:mb-0 md:mr-6">
+          <div className="container mx-auto mt-5 flex flex-wrap justify-left md:flex-nowrap">
+            <div className="w-full md:w-80 h-auto bg-gray-300 rounded-lg overflow-hidden mb-6 md:mb-0 md:mr-6 ml-10">
               <img
                 className="w-full h-full object-cover"
                 src={eventInfo.image}
@@ -68,7 +68,7 @@ const EventDetails = () => {
             </div>
 
             <div className="p-6 flex flex-col justify-left">
-              <h1 className="text-4xl font-bold">{eventInfo.title}</h1>
+              <h1 className="text-4xl font-bold text-[#142c0c]">{eventInfo.title}</h1>
               <div className="flex items-center mt-2">
                 <FontAwesomeIcon icon={faLocationDot} className="mr-2" />
                 <span>{eventInfo.location}</span>
@@ -91,11 +91,11 @@ const EventDetails = () => {
                   <FontAwesomeIcon icon={faUserGroup} className="mr-2" />
                   <span>{eventInfo.limit}</span>
                 </div>
-              </div>
+              </div>  
               
               <div className='mt-4'>
-                  <span>Ticket Price : {eventInfo.price}</span>
-                </div>
+                <span>Ticket Price: {eventInfo.price}</span>
+              </div>
 
               <div className="flex justify-left mt-5">
                 {user ? (
@@ -158,14 +158,14 @@ const EventDetails = () => {
       <div className="container mx-auto">
         <div className="container mx-auto min-w-[400px]">
           <div className="container relative p-6 justify-center">
-            <h1 className="text-2xl font-bold">About The Event</h1>
+            <h1 className="text-2xl font-bold text-[#142c0c]">About The Event</h1>
             <div className="bg-gray-300 rounded-lg p-6">
               <p className="text-justify">{eventInfo.description}</p>
             </div>
           </div>
 
-          <div className="container relative p-6  justify-center">
-            <h1 className="text-2xl font-bold">Hosts</h1>
+          <div className="container relative p-6 justify-center">
+            <h1 className="text-2xl font-bold text-[#142c0c]">Hosts</h1>
             <div className="bg-gray-300 rounded-lg p-6">
               <p className="text-justify">{eventInfo.description}</p>
             </div>

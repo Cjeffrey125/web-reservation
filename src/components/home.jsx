@@ -10,7 +10,7 @@ const Home = () => {
       </div>
       <div className='absolute w-full h-full top-0 left-0 bg-gray-900/30'></div>
       <div className='absolute top-0 w-full h-full flex flex-col justify-center text-center text-black p-4'>
-        <h1 className='text-5xl text-white'>Experience the Thrill at Biñan</h1>
+        <h1 className='text-5xl text-white'>EXPERIENCE THE THRILL AT BIÑAN</h1>
         <h2 className='py-4 text-white'>Explore Biñan Ticket!</h2>
         <form className='items-center'>
           <div>

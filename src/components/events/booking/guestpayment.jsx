@@ -43,7 +43,7 @@ const GuestPayment = ({ onConfirmed }) => {
   };
 
   return (
-    <div className="payment-container h-[168%] w-full border-2 rounded-lg border-gray-500 mt-10 flex flex-col">
+    <div className="payment-container h-[168%] w-full border-1.5 rounded-lg mt-10 flex flex-col bg-white shadow-lg">
       <h1 className="payment-title text-2xl mt-4 ml-4">Payment Summary</h1>
 
       <div className="payment-content flex flex-col items-left ml-12 justify-center flex-1">

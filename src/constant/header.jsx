@@ -123,7 +123,7 @@ const Header = () => {
       className={`flex w-full justify-between items-center h-20 px-4 z-10 text-black navbar sticky top-0 backdrop-blur-lg bg-white/30`}
     > 
       <div>
-        <h1>Biñan</h1>
+      <img src={images.logo} alt="Logo" className="h-12" />
       </div>
 
       <ul className="hidden md:flex">
@@ -173,8 +173,9 @@ const Header = () => {
         className={nav ? ' z-10 absolute text-black left-0 top-0 w-full bg-gray-100/90 px-4 py-7 flex flex-col' : 'absolute left-[-100%]'}
       >
         <ul>
-          <h1>Biñan</h1>
-
+        <div>
+      <img src={images.logo} alt="Logo" className="h-12" />
+      </div>
           <li className="border-b hover:bg-green-200">
             <Link to="/">Home</Link>
           </li>

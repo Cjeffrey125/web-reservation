@@ -23,17 +23,21 @@ const UpcomingLayout = ({ title, date_time, genre1, genre2, org, price, transact
           <div className="text-xs px-2 py-1 rounded-full border border-black">{genre2}</div>
         </div>
         <div className="flex justify-between items-center">
-        <div className="text-sm mt-2 ">
-        <FontAwesomeIcon icon={faCheckCircle} className="text-black" />{org}</div>
-        <div className="text-sm mt-2">{price}</div>
+          <div className="text-sm mt-2 ">
+            <FontAwesomeIcon icon={faCheckCircle} className="text-black" />
+            {org}
+          </div>
+          <div className="text-sm mt-2">{price}</div>
         </div>
 
         <div className="flex justify-between">
-        <button className="w-40 h-12 rounded-full shadow-shadowOne flex items-center justify-center 
-        bg-gradient-to-r from-bodyColor to-[#73d081] group hover:bg-gradient-to-b hover:from-green-200 hover:to-green-300 
-        transition-colors duration-1000 mx-auto text-black">Book Now</button>
+          <button className="w-40 h-12 rounded-full shadow-shadowOne flex items-center justify-center 
+            bg-gradient-to-r from-bodyColor to-[#73d081] group hover:bg-[#453352] hover:from-green-200 hover:to-green-300 
+            transition-colors duration-1000 mx-auto text-black transition-bg-color duration-100">Book Now</button>
           <div className="text-sm mt-2">
-          <FontAwesomeIcon icon={faUserGroup} />{limit}</div>
+            <FontAwesomeIcon icon={faUserGroup} />
+            {limit}
+          </div>
         </div>
       </div>
     </div>

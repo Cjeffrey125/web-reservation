@@ -8,12 +8,17 @@ const BlogDetails = () => {
   const articleInfo = blogData.find((article) => article.articlekey === parsedArticleKey);
 
   return (
-    <div className="container mx-auto px-4">
-      <section className="bg-white rounded-lg shadow-md py-6">
-        <div className="mt-24 ml-8 grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto">
+    <div className="container mx-auto px-4 mt-10 mb-10"> 
+      <section className="bg-white rounded-lg shadow-md py-4">
+        <div className="mt-20 ml-8 grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto">
           <div>
-            <h1 className="text-4xl font-bold">{articleInfo.title}</h1>
-            <p className="text-gray-600">{articleInfo.date} | {articleInfo.organization}</p>
+            <h1 className="text-4xl font-bold text-[#142c0c]">{articleInfo.title}</h1>
+            <div className="text-gray-600">
+              <p>{articleInfo.date} | {articleInfo.organization}</p>
+            </div>
+            <div className="mt-8">
+              <p>{articleInfo.description}</p>
+            </div>
           </div>
 
           <div>
@@ -23,10 +28,6 @@ const BlogDetails = () => {
               alt="Article Image"
             />
           </div>
-        </div>
-
-        <div className="mt-8 ml-8">
-          <p>{articleInfo.description}</p>
         </div>
       </section>
     </div>
